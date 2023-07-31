@@ -1,11 +1,17 @@
-//#region Estructura
-//Elementos principales
+// -----------------> ESTRUCTURA
+//#region Elementos principales
+
 let list1 = ["Santiago", "Javier", "Otniel", "Oscar", "Morales"];
 let list2 = ["Marcos", "Angel", "Millar", "Daniel", "Pedro"];
 let nombre1 = list1[Math.floor(Math.random() * list1.length)];
 let nombre2 = list2[Math.floor(Math.random() * list2.length)];
 let jugador1 = { hp: 50, str: 20, def: 5, name: nombre1 }
 let jugador2 = { hp: 50, str: 10, def: 5, name: nombre2 }
+
+let hpConst1 = jugador1.hp
+let strConst1 = jugador1.str    
+let hpConst2 = jugador2.hp
+let strConst2 = jugador2.str
 
 let body = document.querySelector('body');
 let divContentPrincipal = document.querySelector('div')
@@ -17,7 +23,10 @@ let sectionUno = colecSection[0]
 let sectionDos = colecSection[1]
 let sectionTres = colecSection[2]
 let sectionCuatro = colecSection[3]
-
+let select = document.querySelector('select')
+let colecBtns = document.getElementsByTagName('button')
+let btnAtk1 = colecBtns[0]
+let btnAtk2 = colecBtns[1]
 let colecArticulo = document.getElementsByTagName('article')
 let articuloUno = colecArticulo[0]
 let articuloDos = colecArticulo[1]
@@ -35,9 +44,7 @@ let divEstadistica2 = document.createElement('div')
 
 let divBotonAtk1 = sectionTres.children[0]
 let divBotonAtk2 = sectionTres.children[1]
-console.log(articuloUno);
-console.log(articuloDos);
-
+//#endregion
 //#region sectionUno 
 //articuloUno
 articuloUno.appendChild(contentBarra1)//barra1 = sectionUno.children[0].children[0]
@@ -110,12 +117,12 @@ tituloJugador1.innerText = `Héroe: ${jugador1.name}`
 tituloJugador2.innerText = `Rey Demonio: ${jugador2.name} `
 colecSection.style = `display:flex; flex-direction:column;`
 sectionUno.style = `display:flex; justify-content:space-between;height:120px;background-color:#bcbdc4`
-sectionDos.style = `display:flex; justify-content:space-between;height:90px;color:#fff;`
+sectionDos.style = `display:flex; justify-content:space-between;height:200px;color:#fff;`
 sectionTres.style = `display:flex; justify-content:space-evenly;border: solid 1px black;height:110px;background-color:#bcbdc4`
 articuloUno.style = `display:flex; flex-direction:column;border: solid 1px black;width:50%`
 articuloDos.style = `display:flex; flex-direction:column;border: solid 1px black;width:50%`
-articuloTres.style = `border: solid 1px black;width:50%`
-articuloCuatro.style = `border: solid 1px black;width:50%`
+articuloTres.style = `border: solid 1px black;width:50%;overflow-y:scroll`
+articuloCuatro.style = `border: solid 1px black;width:50%;overflow-y:scroll;`
 contentBarra1.style = `margin-left:10%;margin-top:2%; display:flex;border:solid 2px #22f178;border-radius:4px;width:fit-content`//008839
 contentBarra2.style = `margin-left:10%;margin-top:2%; display:flex;border:solid 2px #22f178;border-radius:4px;width:fit-content`
 divContentJugador1.style = `font-weight:600;margin-top:3%;display:flex; flex-direction:row; align-items:center;justify-content:space-around`
@@ -139,13 +146,13 @@ tagDef2.style = `border-bottom: solid 1px #06202b;width:190px;`
 divBotonAtk1.style = `margin-top:2%`
 divBotonAtk2.style = `margin-top:2%`
 //#endregion
-
-
+//#region sectionDos
 
 
 //#endregion
+// -----------------> FIN ESTRUCTURA
 //#region Funcionalidad
-
+select.disabled=true;
 //Creacion de jugadores
 const creaJugador1 = () => {
     let a = { hp: 50, str: 20, def: 5, name: nombre1 }
@@ -175,4 +182,74 @@ function barraVida(param1, param2) {
 }
 barraVida(jugador1, contentBarra1)
 barraVida(jugador2, contentBarra2)
+
+//let maxHP = jugador.hp
+const atkJugador = (jugadorA, jugadorB) => {//JugadorB atacando
+    
+    let dps = jugadorB.str - jugadorA.def //Daño por seg hecho por B;
+    let muerto1 = false;
+    let muerto2 = false;
+
+    if (jugadorA.hp >1) {
+        if (event.target == btnAtk1) {
+            let prfDaño = document.createElement('p')
+            articuloTres.appendChild(prfDaño)
+            prfDaño.innerText = `${jugador1.name} ha hecho daño: ${dps}`
+            prfHp2.innerText = jugador2.hp - dps
+            if(prfHp2.innerText < 1 && muerto2==false){
+                muerto2 = true
+                prfHp2.innerText = 0
+                alert(`${jugador2.name} entra en segunda Fase`)
+                
+            }
+        }
+        if (event.target == btnAtk2) {
+            let prfDaño = document.createElement('p')
+            articuloCuatro.appendChild(prfDaño)
+            prfDaño.innerText = `${jugador2.name} ha hecho daño: ${dps}`
+            prfHp1.innerText = jugador1.hp - dps
+            if(prfHp1.innerText < 1 && muerto1==false){
+                muerto1 = true
+                prfHp1.innerText = 0
+                alert(`${jugador1.name} usara su ultima Voluntad`) 
+                
+            }
+        }
+        
+    }
+  const segundaFase=()=>{
+    
+    if (muerto1==true) {
+        select.disabled=false
+        prfHp1.innerText = hpConst1 * 2
+        console.log(`Hola 1`)
+     
+    }
+    else if (muerto2==true) {
+        console.log(`Hola 2`)
+        prfHp2.innerText = hpConst2 * 2
+        prfStr2.innerText = strCon * 2
+        hpConst2*=2
+        
+        
+    }
+  }  
+   segundaFase()
+   return jugadorA.hp -= dps //Almacenamos daño hecho por argumento1
+}//end function atakJugador
+
+btnAtk1.addEventListener('click', () => {
+    atkJugador(jugador2, jugador1)
+    btnAtk1.disabled = true
+    btnAtk2.disabled = false
+});
+
+btnAtk2.addEventListener('click', () => {
+    atkJugador(jugador1, jugador2)//resto hp jugador1, ataca el 2do argumento
+    btnAtk2.disabled = true
+    btnAtk1.disabled = false
+});
+
+
+
 //#endregion
